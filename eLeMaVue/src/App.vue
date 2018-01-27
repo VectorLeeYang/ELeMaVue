@@ -7,9 +7,9 @@
         <router-link class="tab-item" to="/seller">商家</router-link>
     </div>
       <router-view></router-view>
-    <div class="content">
-      content
-    </div>
+    <!--<div class="content">-->
+      <!--content-->
+    <!--</div>-->
   </div>
 </template>
 
