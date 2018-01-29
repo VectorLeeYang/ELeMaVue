@@ -2,16 +2,19 @@
     <div class="goods">
         <div class="menu-wrapper">
             <ul>
-                <li v-for="item in goods" :key="item.id" class="menu-item">
+                <li v-for="(item, index) in goods" :key="item.id"
+                    class="menu-item"
+                    :class="{'highlightClass': caluclateCurrentIndex === index}"
+                    @click="selectMenu(index)">
                     <span class="text">
                         <span v-show="item.type > 0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
                     </span>
                 </li>
             </ul>
         </div>
-        <div class="foods-wrapper">
+        <div class="foods-wrapper" ref="foodsUlHook">
             <ul>
-                <li v-for="item in goods" :key="item.id" class="food-list">
+                <li v-for="item in goods" :key="item.id" class="food-list" ref="foodListHook">
                     <h1 class="title">{{item.name}}</h1>
                     <ul>
                         <li v-for="food in item.foods" :key="food.id" class="food-item">
@@ -45,18 +48,9 @@
             return {
                 goods: [],
                 classMap: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
-                topStatus: '',
-                pageNo: 1,
-                allLoaded: false,
-                bottomText: '上拉加载更多...',
-                numPerPage: 4,
-                settings: {
-                    title: '添加常客'
-                },
-                bottomStatus: '',
-                wrapperHeight: 0,
-                translate: 0,
-                moveTranslate: 0
+                listHeight: [],
+                currentIndex: 0,
+                scrollTop: 0
             }
         },
         props: {
@@ -64,18 +58,54 @@
                 type: Object
             }
         },
+        computed: {
+            caluclateCurrentIndex () {
+                for (let i = 0; i < this.listHeight.length; i++) {
+                    let height1 = this.listHeight[i]
+                    let height2 = this.listHeight[i + 1]
+                    if (!height2 || (this.scrollTop >= height1 && this.scrollTop < height2)) {
+                        return i
+                    }
+                }
+                return 0
+            }
+        },
+        methods: {
+            caluclateHeight: function () {
+                let foodList = this.$refs.foodListHook
+                let height = 0
+                this.listHeight.push(height)
+                for (let i = 0; i < foodList.length; i++) {
+                    let item = foodList[i]
+                    height += item.clientHeight + 18 // 每个item有18的外边距
+                    this.listHeight.push(height)
+                }
+            },
+            handleScroll () {
+                let foodsUlHook = this.$refs.foodsUlHook
+                this.scrollTop = foodsUlHook.scrollTop
+            },
+            selectMenu (index) {
+                let foodsUlHook = this.$refs.foodsUlHook
+                let scrollTop = this.listHeight[index]
+                foodsUlHook.scrollTop = scrollTop
+            }
+        },
         created () {
             let _this = this
             this.$axios.get('goods').then(function (response) {
                 _this.goods = response
+                _this.$nextTick(function () {
+                    _this.caluclateHeight()
+                })
             })
         },
-        methods: {
-            translateChange (translate) {
-                const translateNum = +translate
-                this.translate = translateNum.toFixed(2)
-                this.moveTranslate = (1 + translateNum / 70).toFixed(2)
-            }
+        mounted () {
+            let foodsUlHook = this.$refs.foodsUlHook
+            foodsUlHook.addEventListener('scroll', this.handleScroll)
+        },
+        destroyed () {
+            this.$refs.foodsUlHook.removeEventListener('scroll', this.handleScroll)
         }
     }
 </script>
@@ -94,6 +124,8 @@
             background #f3f5f7
             overflow-y scroll
             overflow-x hidden
+            .highlightClass
+                background lightgrey
             .menu-item
                 display table
                 height 54px
@@ -141,7 +173,7 @@
                             color rgb(7, 17, 27)
                         .desc
                             margin-bottom 8px
-                            line-height 10px
+                            line-height 12px
                             font-size  10px
                             color rgb(147, 153, 159)
                         .extra
