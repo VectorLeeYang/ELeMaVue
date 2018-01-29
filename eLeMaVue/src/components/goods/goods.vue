@@ -38,12 +38,12 @@
                 </li>
             </ul>
         </div>
-        <shopcat class="shopcat"></shopcat>
+        <shopcart :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
     </div>
 </template>
 
 <script>
-    import shopcat from '../shopcat/shopcat.vue'
+    import shopcart from '../shopcart/shopcart.vue'
     export default {
         name: 'Goods',
         data () {
@@ -59,8 +59,8 @@
                 type: Object
             }
         },
-        conponents: {
-          'shopcat': shopcat
+        components: {
+          'shopcart': shopcart
         },
         computed: {
             caluclateCurrentIndex () {
