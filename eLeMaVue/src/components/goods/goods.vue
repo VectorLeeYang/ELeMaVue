@@ -38,10 +38,12 @@
                 </li>
             </ul>
         </div>
+        <shopcat class="shopcat"></shopcat>
     </div>
 </template>
 
 <script>
+    import shopcat from '../shopcat/shopcat.vue'
     export default {
         name: 'Goods',
         data () {
@@ -49,7 +51,6 @@
                 goods: [],
                 classMap: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
                 listHeight: [],
-                currentIndex: 0,
                 scrollTop: 0
             }
         },
@@ -57,6 +58,9 @@
             seller: {
                 type: Object
             }
+        },
+        conponents: {
+          'shopcat': shopcat
         },
         computed: {
             caluclateCurrentIndex () {
@@ -87,8 +91,8 @@
             },
             selectMenu (index) {
                 let foodsUlHook = this.$refs.foodsUlHook
-                let scrollTop = this.listHeight[index]
-                foodsUlHook.scrollTop = scrollTop
+                let scrollTopY = this.listHeight[index]
+                foodsUlHook.scrollTop = scrollTopY
             }
         },
         created () {

@@ -2,7 +2,7 @@
 该项目是模仿饿了么app商家界面，利用vue.js实现
 
 ### 项目技术
-vue.js2.3 + vue-router + axios + stylus  + webpack
+vue.js2.x + vue-router + axios + stylus  + webpack
 
 ### 项目心得
 #### 1、axios网络框架封装
@@ -42,8 +42,16 @@ stciky footer布局最主要有以下要点：
 ```
 
 
+#### 3、自定义实现商品界面列两个列表的联动
+该功能主要技术点和逻辑处理如下：
 
-#### 3、vue2.3新特性
++ 利用overflow-y scroll实现列表的垂直方向滚动，并且overflow-x hidden隐藏水平方向的滚动
++ 在data中定义listHeight数组，存放每个li标签的高度
++ 监听食品列表的滑动事件，记录滑动的位置
++ 给食品分类列表绑定一个计算属性，计算当前滑动的位置在listHeight数组中的哪一个区间，从而返回对应的数组下标，即对应食品列表中相应的分类
++ 当点击食品分类列表中的item时，获取到当前item对应的下标，从listHeight中取出高度，同时让食品列表滚动到对于的高度
+
+#### 4、vue2.x新特性
 + v-for使用过程中，需要注意添加“：key”，否则会报错，原因官网也未做具体说明。
 
 ```
