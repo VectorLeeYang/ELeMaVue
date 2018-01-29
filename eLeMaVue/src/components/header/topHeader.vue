@@ -167,16 +167,6 @@
                 font-size 10px
                 margin-left 2px
                 line-height 24px
-    .discount
-        bg-image('discount_1')
-    .decrease
-        bg-image('decrease_1')
-    .guarantee
-        bg-image('guarantee_1')
-    .invoice
-        bg-image('invoice_1')
-    .special
-        bg-image('decrease_1')
       .bulletin-wrapper
         height 28px
         line-height 28px
@@ -258,7 +248,7 @@
                             background-size 16px 16px
                             background-repeat no-repeat
                         .text
-                            ont-size: 12px
+                            font-size: 12px
                             height 16px
                             line-height: 16px
                 .bulletin
@@ -274,4 +264,14 @@
             height 32px
             margin -32px auto 0 auto
             clear both font-size 15px
+      .discount
+        bg-image('discount_1')
+      .decrease
+        bg-image('decrease_1')
+      .guarantee
+        bg-image('guarantee_1')
+      .invoice
+        bg-image('invoice_1')
+      .special
+        bg-image('decrease_1')
 </style>

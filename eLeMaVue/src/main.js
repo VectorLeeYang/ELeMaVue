@@ -4,7 +4,10 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Network from './common/js/network.js'
+import Mint from 'mint-ui'
+import 'mint-ui/lib/style.css'
 
+Vue.use(Mint)
 // 添加的全局方法最好是加上$标识符 这样好区分
 Vue.prototype.$axios = Network
 
