@@ -32,18 +32,25 @@
                                     <span class="now">￥{{food.price}}</span>
                                     <span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
                                 </div>
+                                <div class="cartcontrol-wrapper">
+                                    <cartcontrol :food="food"></cartcontrol>
+                                </div>
                             </div>
                         </li>
                     </ul>
                 </li>
             </ul>
         </div>
-        <shopcart :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
+        <shopcart :deliveryPrice="seller.deliveryPrice"
+                  :minPrice="seller.minPrice"
+                  :selectedFoods="selectedFoods"
+                  ref="shopcart"></shopcart>
     </div>
 </template>
 
 <script>
     import shopcart from '../shopcart/shopcart.vue'
+    import cartcontrol from '../cartcontrol/cartcontrol.vue'
     export default {
         name: 'Goods',
         data () {
@@ -60,7 +67,8 @@
             }
         },
         components: {
-          'shopcart': shopcart
+          'shopcart': shopcart,
+          'cartcontrol': cartcontrol
         },
         computed: {
             caluclateCurrentIndex () {
@@ -72,6 +80,17 @@
                     }
                 }
                 return 0
+            },
+            selectedFoods () {
+                let foods = []
+                this.goods.forEach((good) => {
+                    good.foods.forEach((food) => {
+                        if (food.count) {
+                            foods.push(food)
+                        }
+                    })
+                })
+                return foods
             }
         },
         methods: {
@@ -93,6 +112,11 @@
                 let foodsUlHook = this.$refs.foodsUlHook
                 let scrollTopY = this.listHeight[index]
                 foodsUlHook.scrollTop = scrollTopY
+            },
+            dropCart (target) {
+                this.$nextTick(() => {
+                    this.$refs.shopcart.drop(target)
+                })
             }
         },
         created () {
@@ -107,6 +131,10 @@
         mounted () {
             let foodsUlHook = this.$refs.foodsUlHook
             foodsUlHook.addEventListener('scroll', this.handleScroll)
+            let _this = this
+            this.$root.eventHub.$on('cartAdd', (target) => {
+                _this.dropCart(target)
+            })
         },
         destroyed () {
             this.$refs.foodsUlHook.removeEventListener('scroll', this.handleScroll)
@@ -194,6 +222,9 @@
                                 color orangered
                             .old
                                 color rgb(147, 153, 159)
+                        .cartcontrol-wrapper
+                            position relative
+                            bottom 20px
         .discount
             bg-image('../header/discount_2')
         .decrease
